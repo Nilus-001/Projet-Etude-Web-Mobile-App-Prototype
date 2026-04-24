@@ -1,18 +1,49 @@
 <template>
-  <div class="default-layout">
-    <AppHeader title="test" />
-      <slot id="main-slot" />
+  <div class="app-layout">
+    <AppHeader
+      :title="currentPage.title"
+      :subtitle="currentPage.subtitle"
+      :show-notif="currentPage.showNotif"
+      @notif="store.toggleAlertPanel"
+    />
+
+    <main class="layout-main">
+      <slot />
+    </main>
+
     <AppNavBottom />
   </div>
 </template>
 
-<script setup>
-import AppHeader from "~/components/contexts/AppHeader.vue";
-import AppNavBottom from "~/components/contexts/AppNavBottom.vue";
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { useAppStore } from '../store/app'
+import { computed, ref } from 'vue'
+import AppHeader from "../components/core/AppHeader.vue";
+import AppNavBottom from "../components/core/AppNavBottom.vue";
+
+const route = useRoute()
+const store = useAppStore()
+
+const pages: Record<string, { title: string; subtitle?: string; showNotif?: boolean }> = {
+  '/':         { title: 'Bonjour, Julien 👋', showNotif: true },
+  '/meteo':    { title: 'Météo', subtitle: 'Yvetot — Normandie' },
+  '/capteurs': { title: 'Capteurs & données', subtitle: 'Parcelle A — dernières 24h' },
+  '/sante':    { title: 'Santé des cultures', subtitle: 'Analyse prédictive IA' },
+}
+
+
+const currentPage = computed(() => pages[route.path] ?? { title: 'AgriSense' })
 </script>
 
 <style lang="scss">
-#main-slot {
-  margin-top: 100em;
+.app-layout {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.layout-main {
+  // Content sits under fixed header + status bar + nav
 }
 </style>

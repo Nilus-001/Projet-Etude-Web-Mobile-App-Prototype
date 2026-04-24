@@ -64,6 +64,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
+
 const healthScore = ref(74)
 
 const diseases = [
@@ -98,118 +101,115 @@ const products = [
 </script>
 
 <style scoped lang="scss">
-  .sante-risques {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 8em;
-    margin-bottom: 6em;
+.sante-risques {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
+.health-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.score-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.score-value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent-green);
+  line-height: 1;
+}
+
+.score-max {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.score-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.score-ring {
+  svg { overflow: visible; }
+}
+
+.disease-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.disease-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
+}
 
-  .health-score {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
+.disease-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.disease-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.disease-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.disease-desc {
+  margin-top: 2px;
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
+}
 
-  .score-text {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .score-value {
-    font-size: 3.5rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: var(--accent-green);
-    line-height: 1;
-  }
-
-  .score-max {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-  }
-
-  .score-label {
-    color: var(--text-secondary);
-    font-weight: 600;
-  }
-
-  .score-ring {
-    svg { overflow: visible; }
-  }
-
-  .disease-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .disease-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border-subtle);
-
-    &:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-  }
-
-  .disease-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: var(--bg-elevated);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-  }
-
-  .disease-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .disease-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .disease-desc {
-    margin-top: 2px;
-  }
-
-  .products-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .product-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border-subtle);
-
-    &:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-  }
-
-  .product-name {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
+.product-name {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
 </style>
