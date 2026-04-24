@@ -23,9 +23,9 @@ const route = useRoute()
 
 const tabs = [
   { to: '/',         label: 'Accueil',  icon: BarChart2 },
-  { to: '/meteo',    label: 'Météo',    icon: Cloud },
-  { to: '/capteurs', label: 'Capteurs', icon: Activity },
-  { to: '/sante',    label: 'Santé',    icon: ShieldCheck },
+  { to: '/MeteoWidget',    label: 'Météo',    icon: Cloud },
+  { to: '/null', label: 'Capteurs', icon: Activity },
+  { to: '/SanteRisques',    label: 'Santé',    icon: ShieldCheck },
 ]
 </script>
 

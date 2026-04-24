@@ -92,6 +92,8 @@ const agri = {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 8em;
+  margin-bottom: 6em;
 }
 
 .weather-hero {

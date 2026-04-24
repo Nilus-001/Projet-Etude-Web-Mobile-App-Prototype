@@ -32,7 +32,7 @@
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
-        <span v-if="alertCount > 0" class="notif-badge">{{ alertCount }}</span>
+<!--        <span v-if="alertCount > 0" class="notif-badge">{{ alertCount }}</span>-->
       </button>
     </div>
   </header>
@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useAppStore } from '~/store/app'
+// import { useAppStore } from '~/store/app'
 
 defineProps<{
   title: string
@@ -50,8 +50,8 @@ defineProps<{
 
 defineEmits(['notif'])
 
-const store = useAppStore()
-const alertCount = computed(() => store.alerts.length)
+// const store = useAppStore()
+// const alertCount = computed(() => store.alerts.length)
 
 const time = ref('')
 let timer: ReturnType<typeof setInterval>
@@ -77,6 +77,7 @@ onUnmounted(() => clearInterval(timer))
   z-index: 100;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-subtle);
+
 }
 
 .status-bar {
