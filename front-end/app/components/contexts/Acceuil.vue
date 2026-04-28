@@ -3,10 +3,11 @@ import { Cloud, Activity, MapPin, ShieldAlert } from 'lucide-vue-next'
 import { useAppStore } from '../../store/app'
 import { useSensorData } from '../../composables/useSensorData'
 import {definePageMeta} from "../../../.nuxt/imports";
-import { ref } from 'vue'
+import {ref, watch} from 'vue'
 import DailySumary from "../core/home/DailySumary.vue";
 import NavGrid from "../core/home/NavGrid.vue";
 import ClassicAlerte from "../core/home/ClassicAlerte.vue";
+import {useFetch} from "nuxt/app";
 
 definePageMeta({ layout: 'default' })
 
@@ -26,10 +27,17 @@ const DailyStat = ref([
   { label: 'Nutriments', value: sensors.value.nutrition, unit :'%', status: 'Bon état', badgeText: 'fine',badgeLevel: 0 },
 ])
 
+
+const { data , pending , error } = useFetch('http://127.0.0.1:8000/weather')
+const test = watch(data, (newVal) => {
+   console.log('Data updated:', newVal);
+})
 </script>
 
 <template>
   <div class="pages animate-fade-up">
+
+    <div></div>
 
     <ClassicAlerte/>
 

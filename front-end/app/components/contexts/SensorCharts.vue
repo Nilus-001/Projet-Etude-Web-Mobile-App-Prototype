@@ -1,7 +1,7 @@
 <template>
   <div class="sensor-charts">
     <!-- Grid capteurs -->
-    <DailySumary :liste="ActualStatA"/>
+    <DailySumary :liste="sensorCard"/>
 
     <!-- Graphique température -->
     <Canva :dataGraph="tempData" :labels="label" title="Température" :colors="['#FF8C00','#0072FF']" ></Canva>
@@ -13,43 +13,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import {ref, onMounted, onUnmounted, watch , computed} from 'vue'
 import { useSensorData } from '../../composables/useSensorData'
 import Canva from "../core/sensor/Canva.vue";
 import DailySumary from "../core/home/DailySumary.vue";
+import {useFetch} from "nuxt/app";
 
 const { sensors } = useSensorData()
 
 
-const tempData = {
-  graph1: [7.2, 6.8, 6.4, 7.5, 10.1, 13.5, 16.2, 17.1, 16.5, 14.8, 12.7, 10.9, 9.4, 8.7, 8.1, 7.6],
-  graph1pred: [
-    ...Array(15).fill(null),
-    7.6,
-    21.4, 20.9, 20.1, 21.5, 17.8, 15.2, 28.9, 30.2, 29.7, 27.5, 25.4, 23.8, 22.1, 21.8, 21.5, 21.2
-  ],
-  graph2: [15.8, 15.2, 14.5, 13.8, 12.1, 10.4, 8.2, 7.1, 6.8, 6.5, 6.2, 5.9, 5.7, 5.5, 5.4, 5.2],
-  graph2pred: [
-    ...Array(15).fill(null),
-    5.2,
-    4.1, 7.4, 3.2, 5.8, 12.4, 25.6, 29.3, 23.0, 30, 25.1, 28.1, 15.3, 10.1, 8.4, 6.1, 6.5
-  ],
-}
-const humidData = {
-  graph1: [24.1, 23.8, 23.5, 24.2, 26.4, 28.1, 30.5, 31.8, 31.2, 29.5, 27.8, 26.2, 25.4, 24.9, 24.5, 24.2],
-  graph1pred: [
-    ...Array(15).fill(null),
-    24.2,
-    32.5, 31.9, 31.2, 30.4, 28.7, 26.5, 24.2, 22.8, 21.5, 20.9, 20.1, 19.4, 18.8, 18.5, 18.2, 18.0
-  ],
-  graph2: [26.5, 26.7, 26.4, 26.8, 27.2, 27.5, 27.9, 28.1, 28.0, 27.8, 27.5, 27.2, 26.9, 26.7, 26.5, 26.4],
-  graph2pred: [
-    ...Array(15).fill(null),
-    26.4,
-    22.4, 23.1, 24.5, 27.8, 30.2, 32.5, 34.1, 35.2, 34.8, 33.1, 30.5, 28.2, 26.4, 25.1, 24.2, 23.5
-  ],
+interface Sensor {
+  temperature_c: number
+  humidity_pct: number
 }
 
+const { data: lastSensor, pending, error, refresh } = useFetch<Sensor>(
+    'http://127.0.0.1:8000/sensors/latest',
+    {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    }
+)
 
 const label = ["Air","Sol"]
 const badgeC = ["Froid","Optimal","Chaud","Élevé !"]
@@ -72,19 +56,57 @@ const returnLevel = (value: number ,interval:Array<number>, badge :Array<string>
       return [4,badge[3]]
   }
 }
-
-
-
-
-
-const ActualStatA = ref([
-  { label: 'Température sol', value: sensors.value.soilTemp ,unit :'°C' , badgeText: returnLevel(sensors.value.soilTemp,cI,badgeC)[1],badgeLevel: returnLevel(sensors.value.soilTemp,cI,badgeC)[0] },
-  { label: 'Température air', value: sensors.value.airTemp ,unit :'°C', badgeText: returnLevel(sensors.value.airTemp,cI,badgeC)[1],badgeLevel: returnLevel(sensors.value.airTemp,cI,badgeC)[0] },
+const sensorCard =  computed(() =>([
+  {
+    label: 'Température air',
+    value: lastSensor.value?.temperature_c ,
+    unit :'°C' ,
+    badgeText: returnLevel( lastSensor.value?.temperature_c ?? 0,cI,badgeC)[1],
+    badgeLevel: returnLevel( lastSensor.value?.temperature_c ?? 0,cI,badgeC)[0]
+  },
+  { label: 'Température sol', value: sensors.value.soilTemp ,unit :'°C', badgeText: returnLevel(sensors.value.soilTemp,cI,badgeC)[1],badgeLevel: returnLevel(sensors.value.soilTemp,cI,badgeC)[0] },
+  { label: 'Humidité air', value:  lastSensor.value?.humidity_pct ,unit : '%', badgeText: returnLevel(lastSensor.value?.humidity_pct ?? 0,hI,badgeH)[1] ,badgeLevel: returnLevel(lastSensor.value?.humidity_pct ?? 0,hI,badgeH)[0] },
   { label: 'Humidité sol', value: sensors.value.soilHumidity,unit :'%', badgeText: returnLevel(sensors.value.soilHumidity,hI,badgeH)[1],badgeLevel: returnLevel(sensors.value.soilHumidity,hI,badgeH)[0]},
-  { label: 'Humidité air', value: sensors.value.airHumidity ,unit : '%', badgeText: returnLevel(sensors.value.airHumidity,hI,badgeH)[1] ,badgeLevel: returnLevel(sensors.value.airHumidity,hI,badgeH)[0] },
   { label: 'Nutriments', value: sensors.value.nutrition ,unit : '%', badgeText: returnLevel(sensors.value.nutrition,nI,badgeN)[1] ,badgeLevel: returnLevel(sensors.value.nutrition,nI,badgeN)[0] },
 
-])
+]))
+
+const tempData = {
+  graph1: [7.2, 6.8, 6.4, 7.5, 10.1, 13.5, 16.2, 17.1, 16.5, 14.8, 12.7, 10.9, 9.4, 8.7, 8.1, 7.6],
+  graph1pred: [
+    ...Array(15).fill(null),
+    lastSensor.value?.temperature_c,
+    21.4, 20.9, 20.1, 21.5, 17.8, 15.2, 28.9, 30.2, 29.7, 27.5, 25.4, 23.8, 22.1, 21.8, 21.5, 21.2
+  ],
+  graph2: [15.8, 15.2, 14.5, 13.8, 12.1, 10.4, 8.2, 7.1, 6.8, 6.5, 6.2, 5.9, 5.7, 5.5, 5.4, 5.2],
+  graph2pred: [
+    ...Array(15).fill(null),
+    5.2,
+    4.1, 7.4, 3.2, 5.8, 12.4, 25.6, 29.3, 23.0, 30, 25.1, 28.1, 15.3, 10.1, 8.4, 6.1, 6.5
+  ],
+}
+const humidData = {
+  graph1: [24.1, 23.8, 23.5, 24.2, 26.4, 28.1, 30.5, 31.8, 31.2, 29.5, 27.8, 26.2, 25.4, 24.9, 24.5, 24.2],
+  graph1pred: [
+    ...Array(15).fill(null),
+    lastSensor.value?.humidity_pct,
+    32.5, 31.9, 31.2, 30.4, 28.7, 26.5, 24.2, 22.8, 21.5, 20.9, 20.1, 19.4, 18.8, 18.5, 18.2, 18.0
+  ],
+  graph2: [26.5, 26.7, 26.4, 26.8, 27.2, 27.5, 27.9, 28.1, 28.0, 27.8, 27.5, 27.2, 26.9, 26.7, 26.5, 26.4],
+  graph2pred: [
+    ...Array(15).fill(null),
+    26.4,
+    22.4, 23.1, 24.5, 27.8, 30.2, 32.5, 34.1, 35.2, 34.8, 33.1, 30.5, 28.2, 26.4, 25.1, 24.2, 23.5
+  ],
+}
+
+
+
+
+
+
+
+
 
 </script>
 

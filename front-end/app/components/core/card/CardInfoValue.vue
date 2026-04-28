@@ -6,7 +6,7 @@ import SmallLabel from "../Label/SmallLabel.vue";
 const props = defineProps({
   eleValue: { type: Object, required: true },
 });
-console.log(props.eleValue);
+
 </script>
 
 <template>
