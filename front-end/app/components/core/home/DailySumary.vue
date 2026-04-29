@@ -4,7 +4,7 @@ import CardInfoValue from "../card/CardInfoValue.vue";
 const props = defineProps({
   liste: { type: Array<Record<string, any>>, required: true },
 });
-console.log(props.liste);
+
 </script>
 
 <template>
