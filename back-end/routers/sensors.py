@@ -29,7 +29,7 @@ def _get_sensor_data(
 @router.get("/")
 def get_all_sensor_data(
     sensor_id: Optional[str] = Query(None, description="Filtrer par capteur (ex: S001)"),
-    fields: Optional[str] = Query(None, description="Colonnes souhaitées séparées par virgule (ex: timestamp,temperature_c)"),
+    fields: Optional[str] = Query(None, description="Colonnes souhaitées séparées par virgule (ex: timpestamp,temerature_c)"),
     date_from: Optional[str] = Query(None, description="Date de début ISO (ex: 2024-01-01)"),
     date_to: Optional[str] = Query(None, description="Date de fin ISO (ex: 2024-12-31)"),
     limit: int = Query(50, ge=1, le=1000),
