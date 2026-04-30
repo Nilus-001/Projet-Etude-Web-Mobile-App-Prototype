@@ -3,6 +3,7 @@ from typing import Optional
 from services.csv_reader import read_csv, filter_rows, select_fields, paginate, apply_date_filter
 from services.csv_writer import append_row, inject_timestamp
 from models.sensor_models import SensorInput
+from predictions.predict import predicted_humidity, predicted_temps
 
 router = APIRouter()
 
@@ -42,6 +43,13 @@ def get_all_sensor_data(
             raise HTTPException(status_code=400, detail=f"Champs invalides : {invalid}. Disponibles : {ALL_FIELDS}")
     return _get_sensor_data(sensor_id, date_from, date_to, field_list, limit, offset)
 
+@router.get("/temperature/prediction")
+def get_temp_prediction():
+    return predicted_temps
+
+@router.get("/humidity/prediction")
+def get_humidity_prediction():
+    return predicted_humidity
 
 @router.get("/temperature")
 def get_temperature(
